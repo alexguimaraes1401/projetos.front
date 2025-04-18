@@ -8,7 +8,14 @@ export interface ProjetoCardProps {
         subcategoriaId: number;
         categoria: {
           nome: string;
-        } | null;
+          subcategorias: {
+              $values: [
+                  {
+                      nome: string
+                  }
+              ]
+          }
+      } | null;
         subcategoria: {
           nome: string;
         } | null;

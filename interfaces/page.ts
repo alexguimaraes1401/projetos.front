@@ -7,6 +7,13 @@ export interface Projeto {
     subcategoriaId: number;
     categoria: {
         nome: string;
+        subcategorias: {
+            $values: [
+                {
+                    nome: string
+                }
+            ]
+        }
     } | null;
     subcategoria: {
         nome: string;
@@ -22,4 +29,10 @@ export interface Subcategoria {
     id: number;
     nome: string;
     categoriaId: number;
+}
+
+
+export interface Pessoa {
+    id: number
+    nomePessoa: string
 }

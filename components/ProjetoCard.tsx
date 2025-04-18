@@ -6,6 +6,7 @@ export default function ProjetoCard({ projeto }: ProjetoCardProps) {
             <h3 className="text-xl font-semibold mb-2">{projeto.tituloProjeto}</h3>
             <p className="text-gray-700 mb-3">{projeto.descricaoProjeto}</p>
             <span className="text-sm text-gray-500">Categoria: {projeto.categoria?.nome}</span>
+            <span className="text-sm text-gray-500">Sub-Categoria: {projeto.categoria?.subcategorias?.$values[0].nome}</span>
         </div>
     );
 }

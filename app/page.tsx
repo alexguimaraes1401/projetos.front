@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 import ProjetoCard from "@/components/ProjetoCard";
 import Filtro from "@/components/Filtro";
 import api from "@/service/api";
-import { Categoria, Projeto, Subcategoria } from "@/interfaces/page";
+import { Categoria, Pessoa, Projeto, Subcategoria } from "@/interfaces/page";
+import PessoaCard from "@/components/PessoaCard";
 
 export default function Home() {
   const [projetos, setProjetos] = useState<Projeto[]>([]);
@@ -11,6 +12,7 @@ export default function Home() {
   const [subcategorias, setSubcategorias] = useState<Subcategoria[]>([]);
   const [categoriaId, setCategoriaId] = useState<number | null>(null);
   const [subcategoriaId, setSubcategoriaId] = useState<number | null>(null);
+  const [pessoas, setPessoas] = useState<Pessoa[]>([]);
 
   const fetchData = async () => {
     const [resCategorias, resSubcategorias] = await Promise.all([
@@ -34,8 +36,15 @@ export default function Home() {
     setProjetos(res.data["$values"]);
   };
 
+  const fetchPessoas = async () => {
+    const res = await api.get('/pessoas');
+    const data = res.data?.$values || [];
+    setPessoas(data);
+  };
+
   useEffect(() => {
     fetchData();
+    fetchPessoas();
   }, []);
 
   useEffect(() => {
@@ -44,24 +53,34 @@ export default function Home() {
 
   const handleCategoriaChange = (id: number | null) => {
     setCategoriaId(id);
-    setSubcategoriaId(null); // zera subcategoria ao trocar categoria
+    setSubcategoriaId(null);
   };
 
   return (
-    <main className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Projetos</h1>
-      <Filtro
-        categorias={categorias}
-        subcategorias={subcategorias.filter((s) => !categoriaId || s.categoriaId === categoriaId)}
-        categoriaId={categoriaId}
-        subcategoriaId={subcategoriaId}
-        onCategoriaChange={handleCategoriaChange}
-        onSubcategoriaChange={setSubcategoriaId}
-      />
-      <div className="grid gap-4 mt-4">
-        {projetos.map((projeto) => (
-          <ProjetoCard key={projeto.id} projeto={projeto} />
-        ))}
+    <main className="p-6 max-w-4xl mx-auto flex gap-5">
+      <div>
+        <h1 className="text-2xl font-bold mb-4">Projetos</h1>
+        <Filtro
+          categorias={categorias}
+          subcategorias={subcategorias.filter((s) => !categoriaId || s.categoriaId === categoriaId)}
+          categoriaId={categoriaId}
+          subcategoriaId={subcategoriaId}
+          onCategoriaChange={handleCategoriaChange}
+          onSubcategoriaChange={setSubcategoriaId}
+        />
+        <div className="grid gap-4 mt-4">
+          {projetos.map((projeto) => (
+            <ProjetoCard key={projeto.id} projeto={projeto} />
+          ))}
+        </div>
+      </div>
+      <div>
+        <h1 className="text-2xl font-bold">Pessoas</h1>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
+          {pessoas.map((pessoa) => (
+            <PessoaCard key={pessoa.id} pessoa={pessoa} />
+          ))}
+        </div>
       </div>
     </main>
   );
